@@ -12,7 +12,7 @@ local AR = {
     ROUNDS_PER_MAG = 30,
     BULLET_SPEED = 750,
     BULLET_MAXDIST = 1000,
-    BULLET_GRAVITY = Vector3.new(0, (workspace.Gravity/(AR.BULLET_SPEED/(((0.7*10)^2)))*2)*-1, 0),
+    BULLET_GRAVITY = Vector3.new(0, -30, 0),
     --Spread--
     MIN_BULLET_SPREAD_ANGLE = 1.88,
     MAX_BULLET_SPREAD_ANGLE = 4,
@@ -26,7 +26,19 @@ local AR = {
     RPM = 600,
     PIERCE_DEMO = true,
     SHOTGUN = false,
-    SHOTGUN_SHOTS = 10,
+	SHOTGUN_SHOTS = 10,
+	
+	Bullet = game.ReplicatedStorage.Bullet,
+
+	--Animations--
+	Animations = {
+		ADS = "rbxassetid://5707613213",
+		CrouchADS = "rbxassetid://5707616614",
+		CrouchReload = "rbxassetid://5707618824",
+		CrouchShoot = "rbxassetid://5707615634",
+		Reload = "rbxassetid://5707606742",
+		Shoot = "rbxassetid://5707608051",
+	},
     ---------------------------------
 }
 
@@ -128,6 +140,63 @@ end
 AR.Client = {}
 local ClientTbl = AR.Client
 
+function ClientTbl.CanRayPierce(hitPart, hitPoint, normal, material, segmentVelocity)
+	--if material == Enum.Material.Plastic or material == Enum.Material.Ice or material == Enum.Material.Glass or material == Enum.Material.SmoothPlastic then
+	--	if hitPart.Transparency >= 0.5 and not hitPart.Name == "HumanoidRootPart" then
+	--		if not hitPart:FindFirstChild("Value") then
+	--			delay(0.1,function() onFragmentPart(hitPart) --[[Debris:AddItem(hitPart, 5)]] end)
+	--		end
+	--		hitPart.Anchored = false
+	--		hitPart.Velocity = segmentVelocity/2
+	--		return true
+	--	end
+	--end
+	if hitPart.Parent:IsA("Tool") then
+		return true
+	end
+	if hitPart.Transparency == 1 then
+		return true
+	end
+	if hitPart.Name == "Handle" and hitPart.Parent:IsA("Accoutrement") then
+		return true
+	end
+	return false
+end
+
+function ClientTbl.EnemyCanRayPierce(hitPart, hitPoint, normal, material, segmentVelocity)
+	--if material == Enum.Material.Plastic or material == Enum.Material.Ice or material == Enum.Material.Glass or material == Enum.Material.SmoothPlastic then
+	--	if hitPart.Transparency >= 0.5 and not hitPart.Name == "HumanoidRootPart" then
+	--		if not hitPart:FindFirstChild("Value") then
+	--			delay(0.1,function() onFragmentPart(hitPart) --[[Debris:AddItem(hitPart, 5)]] end)
+	--		end
+	--		hitPart.Anchored = false
+	--		hitPart.Velocity = segmentVelocity/2
+	--		return true
+	--	end
+	--end
+	if hitPart.Parent:IsA("Tool") then
+		return true
+	end
+	if hitPart.Name == "Handle" and hitPart.Parent:IsA("Accoutrement") then
+		return true
+	end
+	if hitPart ~= nil and hitPart.Parent ~= nil then
+		local humanoid = hitPart.Parent:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			return false
+		else
+			if hitPart.Transparency == 1 then
+				return true
+			else
+				CreateDecal(hitPart,hitPoint,2)
+				return true
+			end
+		end
+	end
+	return false
+end
+
+
 function ClientTbl:OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, clientThatFired, Gun)
 	cosmeticBulletObject:WaitForChild("CylinderHandleAdornment").Enabled = false	
 	cosmeticBulletObject:WaitForChild("CylinderHandleAdornment").Lifetime = 0.2
@@ -188,6 +257,29 @@ end
 --ServerFuncs--
 AR.Server = {}
 local ServerTbl = AR.Server
+
+function ServerTbl.CanRayPierce(hitPart, hitPoint, normal, material, segmentVelocity)
+	--if material == Enum.Material.Plastic or material == Enum.Material.Ice or material == Enum.Material.Glass or material == Enum.Material.SmoothPlastic then
+	--	if hitPart.Transparency >= 0.5 and not hitPart.Name == "HumanoidRootPart" then
+	--		if not hitPart:FindFirstChild("Value") then
+	--			delay(0.1,function() onFragmentPart(hitPart) --[[Debris:AddItem(hitPart, 5)]] end)
+	--		end
+	--		hitPart.Anchored = false
+	--		hitPart.Velocity = segmentVelocity/2
+	--		return true
+	--	end
+	--end
+	if hitPart.Parent:IsA("Tool") then
+		return true
+	end
+	if hitPart.Transparency == 1 then
+		return true
+	end
+	if hitPart.Name == "Handle" and hitPart.Parent:IsA("Accoutrement") then
+		return true
+	end
+	return false
+end
 
 function ServerTbl:OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, cache)
 	if hitPart ~= nil and hitPart.Parent ~= nil then
