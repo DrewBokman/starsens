@@ -44,7 +44,8 @@ function WeaponWrapper.Client:New(player)
     for index, weaponName in pairs(defaultWeapons) do 
         local weapon = weapons[weaponName]:Clone()
         local weaponSettings = Shared.WeaponSettings[weaponName]
-        weaponTable.Weapons[weaponName] = { Weapon = weapon; Settings = weaponSettings }
+        local WeaponClass = self.Server.Modules.WeaponClass:New(player,weaponSettings,weaponName,weapon)
+        weaponTable.Weapons[weaponName] = { Weapon = weapon; Settings = weaponSettings; WeaponClass = WeaponClass}
         weaponTable.AmmoData[index] = { Current = weaponSettings.ROUNDS_PER_MAG; spare = weaponSettings.TOTAL_ROUNDS  }
         weapon.Parent = player.Character
         weapon.Handle.BackWeld.Part1 = player.Character.Torso
@@ -95,6 +96,12 @@ function WeaponWrapper.Client:UnEquip(player)
     weaponTable.CurrentWeapon = nil
 	player.Gun.Value = nil
 	return true 
+end
+
+function WeaponWrapper.Client:Fire(player,Direction)
+    local weaponTable = WeaponWrapper.Players[player.UserId]
+    if not WeaponWrapper.Players[player.UserId].CurrentWeapon then return end
+    if not player.Character then return end 
 end
 
 return WeaponWrapper
