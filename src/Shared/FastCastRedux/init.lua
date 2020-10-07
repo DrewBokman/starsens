@@ -170,7 +170,7 @@ local function GetVelocityAtTime(time, initialVelocity, acceleration)
 end
 
 -- Simulate a raycast.
-local function SimulateCast(origin, direction, velocity, castFunction, lengthChangedEvent, rayHitEvent, cosmeticBulletObject, listOrIgnoreDescendantsInstance, ignoreWater, bulletAcceleration, canPierceFunction, clientThatFired)
+local function SimulateCast(origin, direction, velocity, castFunction, lengthChangedEvent, rayHitEvent, cosmeticBulletObject, listOrIgnoreDescendantsInstance, ignoreWater, bulletAcceleration, canPierceFunction, clientThatFired, cache)
 	PrintDebug("Cast simulation requested.")
 	if type(velocity) == "number" then
 		velocity = direction.Unit * velocity
@@ -246,7 +246,7 @@ local function SimulateCast(origin, direction, velocity, castFunction, lengthCha
 				-- Hit.
 				
 				connection:Disconnect()
-				rayHitEvent:Fire(hit, point, normal, material, segmentVelocity, cosmeticBulletObject, clientThatFired)
+				rayHitEvent:Fire(hit, point, normal, material, segmentVelocity, cosmeticBulletObject, clientThatFired, cache)
 				DbgVisualizeHit(CFrame.new(point), false)
 				return
 			else
@@ -300,14 +300,14 @@ local function SimulateCast(origin, direction, velocity, castFunction, lengthCha
 		
 		if distanceTravelled > distance then
 			connection:Disconnect()
-			rayHitEvent:Fire(nil, lastPoint, nil, nil, Vector3.new(), cosmeticBulletObject, clientThatFired)
+			rayHitEvent:Fire(nil, lastPoint, nil, nil, Vector3.new(), cosmeticBulletObject, clientThatFired, cache)
 		end
 	end
 	
 	connection = targetEvent:Connect(Fire)
 end
 
-local function BaseFireMethod(self, origin, directionWithMagnitude, velocity, cosmeticBulletObject, ignoreDescendantsInstance, ignoreWater, bulletAcceleration, list, isWhitelist, canPierceFunction, clientThatFired)
+local function BaseFireMethod(self, origin, directionWithMagnitude, velocity, cosmeticBulletObject, ignoreDescendantsInstance, ignoreWater, bulletAcceleration, list, isWhitelist, canPierceFunction, clientThatFired, cache)
 	MandateType(origin, "Vector3", "origin")
 	MandateType(directionWithMagnitude, "Vector3", "directionWithMagnitude")
 	assert(typeof(velocity) == "Vector3" or typeof(velocity) == "number", ERR_INVALID_TYPE:format("velocity", "Variant<Vector3, number>", typeof(velocity))) -- This one's an odd one out.
@@ -332,7 +332,7 @@ local function BaseFireMethod(self, origin, directionWithMagnitude, velocity, co
 			castFunction = CastWithBlacklist
 		end
 	end
-	SimulateCast(origin, directionWithMagnitude, velocity, castFunction, self.LengthChanged, self.RayHit, cosmeticBulletObject, ignoreOrList, ignoreWater, bulletAcceleration, canPierceFunction, clientThatFired)
+	SimulateCast(origin, directionWithMagnitude, velocity, castFunction, self.LengthChanged, self.RayHit, cosmeticBulletObject, ignoreOrList, ignoreWater, bulletAcceleration, canPierceFunction, clientThatFired, cache)
 end
 
 -----------------------------------------------------------
@@ -348,21 +348,21 @@ function FastCast.new()
 end
 
 -- Fire with stock ray
-function FastCast:Fire(origin, directionWithMagnitude, velocity, cosmeticBulletObject, ignoreDescendantsInstance, ignoreWater, bulletAcceleration, canPierceFunction, clientThatFired)
+function FastCast:Fire(origin, directionWithMagnitude, velocity, cosmeticBulletObject, ignoreDescendantsInstance, ignoreWater, bulletAcceleration, canPierceFunction, clientThatFired, cache)
 	assert(getmetatable(self) == FastCast, ERR_NOT_INSTANCE:format("Fire", "FastCast.new()"))
-	BaseFireMethod(self, origin, directionWithMagnitude, velocity, cosmeticBulletObject, ignoreDescendantsInstance, ignoreWater, bulletAcceleration, nil, nil, canPierceFunction, clientThatFired)
+	BaseFireMethod(self, origin, directionWithMagnitude, velocity, cosmeticBulletObject, ignoreDescendantsInstance, ignoreWater, bulletAcceleration, nil, nil, canPierceFunction, clientThatFired, cache)
 end
 
 -- Fire with whitelist
-function FastCast:FireWithWhitelist(origin, directionWithMagnitude, velocity, whitelist, cosmeticBulletObject, ignoreWater, bulletAcceleration, canPierceFunction, clientThatFired)
+function FastCast:FireWithWhitelist(origin, directionWithMagnitude, velocity, whitelist, cosmeticBulletObject, ignoreWater, bulletAcceleration, canPierceFunction, clientThatFired, cache)
 	assert(getmetatable(self) == FastCast, ERR_NOT_INSTANCE:format("FireWithWhitelist", "FastCast.new()"))
-	BaseFireMethod(self, origin, directionWithMagnitude, velocity, cosmeticBulletObject, nil, ignoreWater, bulletAcceleration, whitelist, true, canPierceFunction, clientThatFired)
+	BaseFireMethod(self, origin, directionWithMagnitude, velocity, cosmeticBulletObject, nil, ignoreWater, bulletAcceleration, whitelist, true, canPierceFunction, clientThatFired, cache)
 end
 
 -- Fire with blacklist
-function FastCast:FireWithBlacklist(origin, directionWithMagnitude, velocity, blacklist, cosmeticBulletObject, ignoreWater, bulletAcceleration, canPierceFunction, clientThatFired)
+function FastCast:FireWithBlacklist(origin, directionWithMagnitude, velocity, blacklist, cosmeticBulletObject, ignoreWater, bulletAcceleration, canPierceFunction, clientThatFired, cache)
 	assert(getmetatable(self) == FastCast, ERR_NOT_INSTANCE:format("FireWithBlacklist", "FastCast.new()"))
-	BaseFireMethod(self, origin, directionWithMagnitude, velocity, cosmeticBulletObject, nil, ignoreWater, bulletAcceleration, blacklist, false, canPierceFunction, clientThatFired)
+	BaseFireMethod(self, origin, directionWithMagnitude, velocity, cosmeticBulletObject, nil, ignoreWater, bulletAcceleration, blacklist, false, canPierceFunction, clientThatFired, cache)
 end
 
 -- Export

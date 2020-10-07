@@ -13,13 +13,15 @@ local RNG = Random.new()
 local PartCache = require(ReplicatedStorage.Aero.Shared.PartChache)
 local FastCast = require(ReplicatedStorage.Aero.Shared.FastCastRedux)
 
+local ERR_OBJECT_DISPOSED = "This WeaponClass has been Destroyed. It can no longer be used."
+local Rand = Random.new()
 function WeaponClass.new(Player,Config,WeaponName,WeaponPart)
 
 	local self = setmetatable({
 		Player = Player,
 		WeaponPart = WeaponPart,
 		WeaponName = WeaponName,
-		WeaponConfig = require(Config),
+		WeaponConfig = Config,
 		WeaponCaster = FastCast.new(),
 		Reloading = false,
 	}, WeaponClass)
@@ -32,6 +34,13 @@ function WeaponClass.new(Player,Config,WeaponName,WeaponPart)
 		preLoad *= self.WeaponConfig.SHOTGUN_SHOTS
 	end
 	self.cache = PartCache.new(self.WeaponConfig.Bullet, math.clamp(preLoad,0,200),  self.WeaponPart.Parent)
+	self.Bullets = {}
+	self.WeaponCaster.RayHit:Connect(function(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, ClientThatFired)
+		delay(1,function()
+			self.cache:ReturnPart(cosmeticBulletObject)
+		end)
+		self.WeaponConfig.Server.OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, ClientThatFired)
+	end)
 	return self
 
 end
@@ -79,38 +88,52 @@ local function Tween(Time,Goal,Thing,Wait,Style,Direction)
 	return Tween
 end
 
-function WeaponClass:Fire(direction, clientThatFired)
+function WeaponClass:Fire(direction, clientThatFired, Aiming, Crouching)
+	-- direction = Vector3.new(tonumber(direction[1]),tonumber(direction[2]),tonumber(direction[3]))
+	if self.Reloading then return end
+	if Crouching and Aiming then
+		self.MinSpread = self.WeaponConfig.CROUCH_MIN_BULLET_SPREAD_ANGLE
+		self.MaxSpread = self.WeaponConfig.CROUCH_MAX_BULLET_SPREAD_ANGLE
+	elseif Aiming then
+		self.MinSpread = self.WeaponConfig.ADS_MIN_BULLET_SPREAD_ANGLE
+		self.MaxSpread = self.WeaponConfig.ADS_MAX_BULLET_SPREAD_ANGLE
+	else
+		self.MinSpread = self.WeaponConfig.MIN_BULLET_SPREAD_ANGLE
+		self.MaxSpread = self.WeaponConfig.MAX_BULLET_SPREAD_ANGLE
+	end
 	if self.WeaponPart.Parent:IsA("Backpack") then return end
+	self.Rounds -= 1
 	if self.WeaponConfig.SHOTGUN then
 		for i=1,self.WeaponConfig.SHOTGUN_SHOTS do
 			local directionalCF = CFrame.new(Vector3.new(), direction)
 			local direction = (directionalCF * CFrame.fromOrientation(0, 0, RNG:NextNumber(0, TAU)) * CFrame.fromOrientation(math.rad(RNG:NextNumber(self.MinSpread, self.MaxSpread)), 0, 0)).LookVector
 			local humanoidRootPart = self.WeaponPart.Parent:WaitForChild("HumanoidRootPart", 1)
-			local modifiedBulletSpeed = (direction * self.BULLET_SPEED)
+			local modifiedBulletSpeed = (direction * self.WeaponConfig.BULLET_SPEED)
 			local bullet = self.cache:GetPart()
-			if self.PIERCE_DEMO then
-				game.ReplicatedStorage.BulletReplication:FireAllClients(self.WeaponPart.Handle.FirePointObject, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired)
-				self.WeaponCaster:Fire(self.WeaponPart.Handle.FirePointObject.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, self.WeaponConfig.Server.CanRayPierce, clientThatFired)
+			if self.WeaponConfig.PIERCE_DEMO then
+				local bulletID = game:GetService("HttpService"):GenerateGUID(false)
+				
+				self.WeaponCaster:Fire(self.WeaponPart.Handle.GunFirePoint.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, self.WeaponConfig.Server.CanRayPierce, clientThatFired, self.cache)
+				return self.WeaponPart.Handle.GunFirePoint, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired, self.WeaponName
 			else
-				game.ReplicatedStorage.BulletReplication:FireAllClients(self.WeaponPart.Handle.FirePointObject, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired)
-				self.WeaponCaster:Fire(self.WeaponPart.Handle.FirePointObject.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, self.clientThatFired)
+				self.WeaponCaster:Fire(self.WeaponPart.Handle.GunFirePoint.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, nil, self.clientThatFired, self.cache)
+				return self.WeaponPart.Handle.GunFirePoint, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired, self.WeaponName
 			end
 		end
 	else
 		local directionalCF = CFrame.new(Vector3.new(), direction)
 		local direction = (directionalCF * CFrame.fromOrientation(0, 0, RNG:NextNumber(0, TAU)) * CFrame.fromOrientation(math.rad(RNG:NextNumber(self.MinSpread, self.MaxSpread)), 0, 0)).LookVector
 		local humanoidRootPart = self.WeaponPart.Parent:WaitForChild("HumanoidRootPart", 1)
-		local modifiedBulletSpeed = (direction * self.BULLET_SPEED)
+		local modifiedBulletSpeed = (direction * self.WeaponConfig.BULLET_SPEED)
 		local bullet = self.cache:GetPart()
 		if self.PIERCE_DEMO then
-			game.ReplicatedStorage.BulletReplication:FireAllClients(self.WeaponPart.Handle.FirePointObject, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired)
-			self.WeaponCaster:Fire(self.WeaponPart.Handle.FirePointObject.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, self.WeaponConfig.Server.CanRayPierce, clientThatFired)
+			self.WeaponCaster:Fire(self.WeaponPart.Handle.GunFirePoint.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, self.WeaponConfig.Server.CanRayPierce, clientThatFired, self.cache)
+			return self.WeaponPart.Handle.GunFirePoint, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired, self.WeaponName
 		else
-			game.ReplicatedStorage.BulletReplication:FireAllClients(self.WeaponPart.Handle.FirePointObject, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired)
-			self.WeaponCaster:Fire(self.WeaponPart.Handle.FirePointObject.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired)
+			self.WeaponCaster:Fire(self.WeaponPart.Handle.GunFirePoint.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, nil, clientThatFired, self.cache)
+			return self.WeaponPart.Handle.GunFirePoint, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired, self.WeaponName
 		end
 	end
-	self.Rounds -= 1
 	--PlayFireSound()
 end
 
@@ -120,11 +143,11 @@ function WeaponClass:Reload()
 	local AddedRounds = self.WeaponConfig.ROUNDS_PER_MAG
 	self.Mags += self.Rounds
 	self.Rounds = 0
-	Reloading = true
+	self.Reloading = true
 	local canceled = false
 	self.WeaponPart.Handle.Reload:Play()
 	delay(0,function()
-		while Reloading do
+		while self.Reloading do
 			if self.Player.Character.Running.Value == true then
 				self.WeaponPart.Handle.Reload:Stop()
 				canceled = true
@@ -143,11 +166,37 @@ function WeaponClass:Reload()
 		self.Rounds = AddedRounds
 		self.Reloading = false
 	end)
+	return self.WeaponConfig.RELOAD_TIME
 	--ReloadEvent:FireAllClients()
 end
 
-function WeaponClass:OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject)
-	self.WeaponConfig.Server:OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject,self.cache)
+function WeaponClass.OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, cache)
+	print(cache)
+	self.WeaponConfig.Server:OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, cache)
+end
+
+function ErrorDisposed()
+	error(ERR_OBJECT_DISPOSED)
+end
+
+function WeaponClass:Remove()
+	self.cache:Dispose()
+	self.Mags = nil
+	self.Rounds = nil
+	self.MinSpread = nil
+	self.MaxSpread = nil
+	self.Player = nil
+	self.WeaponPart = nil
+	self.WeaponName = nil
+	self.WeaponConfig = nil
+	self.WeaponCaster = nil
+	self.Reloading = nil
+
+	self.OnRayHit = ErrorDisposed
+	self.Reload = ErrorDisposed
+	self.Fire = ErrorDisposed
+	self.Remove = ErrorDisposed
+	
 end
 
 return WeaponClass

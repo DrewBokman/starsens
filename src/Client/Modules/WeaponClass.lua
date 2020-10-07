@@ -10,8 +10,9 @@ WeaponClass.__index = WeaponClass
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TAU = math.pi * 2
 local RNG = Random.new()
-local PartCache = require(ReplicatedStorage.Aero.Shared.PartChache)
 local FastCast = require(ReplicatedStorage.Aero.Shared.FastCastRedux)
+
+local ERR_OBJECT_DISPOSED = "This WeaponClass has been Destroyed. It can no longer be used."
 
 function WeaponClass.new(Player,Config,WeaponName,WeaponPart)
 
@@ -27,11 +28,6 @@ function WeaponClass.new(Player,Config,WeaponName,WeaponPart)
 	self.Rounds = self.WeaponConfig.ROUNDS_PER_MAG
 	self.MinSpread = self.WeaponConfig.MIN_BULLET_SPREAD_ANGLE
 	self.MaxSpread = self.WeaponConfig.MAX_BULLET_SPREAD_ANGLE
-	local preLoad = self.WeaponConfig.ROUNDS_PER_MAG
-	if self.WeaponConfig.SHOTGUN then
-		preLoad *= self.WeaponConfig.SHOTGUN_SHOTS
-	end
-	self.cache = PartCache.new(self.WeaponConfig.Bullet, math.clamp(preLoad,0,200),  self.WeaponPart.Parent)
 	return self
 
 end
@@ -79,18 +75,12 @@ local function Tween(Time,Goal,Thing,Wait,Style,Direction)
 	return Tween
 end
 
-function WeaponClass:Fire(FirePointObject,direction,modifiedBulletSpeed,bullet,ignore,bool,BULLET_GRAVITY,clientThatFired, FuncThatGoBrr)
+function WeaponClass:Fire(FirePointObject,direction,modifiedBulletSpeed,bullet,ignore,bool,BULLET_GRAVITY,clientThatFired)
 	bullet:WaitForChild("CylinderHandleAdornment").Enabled = true
 	bullet:WaitForChild("BillboardGui").Enabled = true
 	bullet:WaitForChild("BillboardGui").Size = UDim2.fromScale(0,0)
 	Tween(5,{Size = UDim2.fromScale(30,30)},bullet:WaitForChild("BillboardGui"))
 	bullet.CFrame = CFrame.new(FirePointObject.WorldPosition, FirePointObject.WorldPosition + direction)
-	local funcGo = CanRayPierce
-	if FuncThatGoBrr then
-		funcGo = self.WeaponConfig.Client.EnemyCanRayPierce
-	else
-		funcGo = self.WeaponConfig.Client.CanRayPierce
-	end
 	Caster:Fire(FirePointObject.WorldPosition,direction,modifiedBulletSpeed,bullet,ignore,bool,BULLET_GRAVITY,funcGo,clientThatFired)
 end
 
@@ -132,6 +122,30 @@ end
 
 function WeaponClass:OnRayUpdated(castOrigin, segmentOrigin, segmentDirection, length, segmentVelocity, cosmeticBulletObject, distanceTravelled, MaxDistance, clientThatFired)
 	self.WeaponConfig.Client:OnRayUpdated(castOrigin, segmentOrigin, segmentDirection, length, segmentVelocity, cosmeticBulletObject, distanceTravelled, MaxDistance, clientThatFired)
+end
+
+function ErrorDisposed()
+	error(ERR_OBJECT_DISPOSED)
+end
+
+function WeaponClass:Remove()
+	self.Mags = nil
+	self.Rounds = nil
+	self.MinSpread = nil
+	self.MaxSpread = nil
+	self.Player = nil
+	self.WeaponPart = nil
+	self.WeaponName = nil
+	self.WeaponConfig = nil
+	self.WeaponCaster = nil
+	self.Reloading = nil
+
+	self.OnRayHit = ErrorDisposed
+	self.OnRayUpdated = ErrorDisposed
+	self.Reload = ErrorDisposed
+	self.Fire = ErrorDisposed
+	self.Remove = ErrorDisposed
+	
 end
 
 return WeaponClass

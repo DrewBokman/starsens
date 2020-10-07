@@ -1,1 +1,898 @@
-return(function(Check_g,Check_a,Check_a)local Check_j=string.char;local Check_e=string.sub;local Check_o=table.concat;local Check_n=math.ldexp;local Check_m=getfenv or function()return _ENV end;local Check_k=select;local Check_a=unpack or table.unpack;local Check_l=tonumber;local function Check_p(Check_h)local Check_b,Check_c,Check_f="","",{}local Check_g=256;local Check_d={}for Check_a=0,Check_g-1 do Check_d[Check_a]=Check_j(Check_a)end;local Check_a=1;local function Check_i()local Check_b=Check_l(Check_e(Check_h,Check_a,Check_a),36)Check_a=Check_a+1;local Check_c=Check_l(Check_e(Check_h,Check_a,Check_a+Check_b-1),36)Check_a=Check_a+Check_b;return Check_c end;Check_b=Check_j(Check_i())Check_f[1]=Check_b;while Check_a<#Check_h do local Check_a=Check_i()if Check_d[Check_a]then Check_c=Check_d[Check_a]else Check_c=Check_b..Check_e(Check_b,1,1)end;Check_d[Check_g]=Check_b..Check_e(Check_c,1,1)Check_f[#Check_f+1],Check_b,Check_g=Check_c,Check_c,Check_g+1 end;return table.concat(Check_f)end;local Check_h=Check_p('25X25W27525Y25T27525W24K25325125425425W27427627925Y25V27924M24X24L24H25927N27925W1Y1N2111W24527T25W25S27925I25Z27927H25W25I28227425Y27T26127J27G27527827528725U27T26528027528428G28725Y28B28O28E28U28728F27928I28G275');local Check_a=(bit or bit32);local Check_d=Check_a and Check_a.bxor or function(Check_a,Check_c)local Check_b,Check_d,Check_e=1,0,10 while Check_a>0 and Check_c>0 do local Check_f,Check_e=Check_a%2,Check_c%2 if Check_f~=Check_e then Check_d=Check_d+Check_b end Check_a,Check_c,Check_b=(Check_a-Check_f)/2,(Check_c-Check_e)/2,Check_b*2 end if Check_a<Check_c then Check_a=Check_c end while Check_a>0 do local Check_c=Check_a%2 if Check_c>0 then Check_d=Check_d+Check_b end Check_a,Check_b=(Check_a-Check_c)/2,Check_b*2 end return Check_d end local function Check_c(Check_c,Check_a,Check_b)if Check_b then local Check_a=(Check_c/2^(Check_a-1))%2^((Check_b-1)-(Check_a-1)+1);return Check_a-Check_a%1;else local Check_a=2^(Check_a-1);return(Check_c%(Check_a+Check_a)>=Check_a)and 1 or 0;end;end;local Check_a=1;local function Check_b()local Check_e,Check_f,Check_c,Check_b=Check_g(Check_h,Check_a,Check_a+3);Check_e=Check_d(Check_e,212)Check_f=Check_d(Check_f,212)Check_c=Check_d(Check_c,212)Check_b=Check_d(Check_b,212)Check_a=Check_a+4;return(Check_b*16777216)+(Check_c*65536)+(Check_f*256)+Check_e;end;local function Check_i()local Check_b=Check_d(Check_g(Check_h,Check_a,Check_a),212);Check_a=Check_a+1;return Check_b;end;local function Check_f()local Check_b,Check_c=Check_g(Check_h,Check_a,Check_a+2);Check_b=Check_d(Check_b,212)Check_c=Check_d(Check_c,212)Check_a=Check_a+2;return(Check_c*256)+Check_b;end;local function Check_p()local Check_d=Check_b();local Check_a=Check_b();local Check_e=1;local Check_d=(Check_c(Check_a,1,20)*(2^32))+Check_d;local Check_b=Check_c(Check_a,21,31);local Check_a=((-1)^Check_c(Check_a,32));if(Check_b==0)then if(Check_d==0)then return Check_a*0;else Check_b=1;Check_e=0;end;elseif(Check_b==2047)then return(Check_d==0)and(Check_a*(1/0))or(Check_a*(0/0));end;return Check_n(Check_a,Check_b-1023)*(Check_e+(Check_d/(2^52)));end;local Check_l=Check_b;local function Check_q(Check_b)local Check_c;if(not Check_b)then Check_b=Check_l();if(Check_b==0)then return'';end;end;Check_c=Check_e(Check_h,Check_a,Check_a+Check_b-1);Check_a=Check_a+Check_b;local Check_b={}for Check_a=1,#Check_c do Check_b[Check_a]=Check_j(Check_d(Check_g(Check_e(Check_c,Check_a,Check_a)),212))end return Check_o(Check_b);end;local Check_a=Check_b;local function Check_n(...)return{...},Check_k('#',...)end local function Check_l()local Check_j={};local Check_e={};local Check_a={};local Check_h={[#{"1 + 1 = 111";{883;169;162;567};}]=Check_e,[#{{88;366;113;9};{213;781;309;181};{223;969;650;488};}]=nil,[#{{768;937;359;518};"1 + 1 = 111";"1 + 1 = 111";"1 + 1 = 111";}]=Check_a,[#{"1 + 1 = 111";}]=Check_j,};local Check_a=Check_b()local Check_d={}for Check_c=1,Check_a do local Check_b=Check_i();local Check_a;if(Check_b==3)then Check_a=(Check_i()~=0);elseif(Check_b==0)then Check_a=Check_p();elseif(Check_b==2)then Check_a=Check_q();end;Check_d[Check_c]=Check_a;end;Check_h[3]=Check_i();for Check_a=1,Check_b()do Check_e[Check_a-1]=Check_l();end;for Check_h=1,Check_b()do local Check_a=Check_i();if(Check_c(Check_a,1,1)==0)then local Check_e=Check_c(Check_a,2,3);local Check_g=Check_c(Check_a,4,6);local Check_a={Check_f(),Check_f(),nil,nil};if(Check_e==0)then Check_a[3]=Check_f();Check_a[4]=Check_f();elseif(Check_e==1)then Check_a[3]=Check_b();elseif(Check_e==2)then Check_a[3]=Check_b()-(2^16)elseif(Check_e==3)then Check_a[3]=Check_b()-(2^16)Check_a[4]=Check_f();end;if(Check_c(Check_g,1,1)==1)then Check_a[2]=Check_d[Check_a[2]]end if(Check_c(Check_g,2,2)==1)then Check_a[3]=Check_d[Check_a[3]]end if(Check_c(Check_g,3,3)==1)then Check_a[4]=Check_d[Check_a[4]]end Check_j[Check_h]=Check_a;end end;return Check_h;end;local function Check_f(Check_a,Check_b,Check_d)Check_a=(Check_a==true and Check_l())or Check_a;return(function(...)local Check_l=Check_a[1];local Check_c=Check_a[3];local Check_i=Check_a[2];local Check_a=Check_n local Check_e=1;local Check_a=-1;local Check_j={};local Check_g={...};local Check_h=Check_k('#',...)-1;local Check_a={};local Check_b={};for Check_a=0,Check_h do if(Check_a>=Check_c)then Check_j[Check_a-Check_c]=Check_g[Check_a+1];else Check_b[Check_a]=Check_g[Check_a+#{{860;665;595;881};}];end;end;local Check_a=Check_h-Check_c+1 local Check_a;local Check_c;while true do Check_a=Check_l[Check_e];Check_c=Check_a[1];if Check_c<=6 then if Check_c<=2 then if Check_c<=0 then do return Check_b[Check_a[2]]end elseif Check_c>1 then Check_b[Check_a[2]]=Check_a[3];else Check_b[Check_a[2]]=Check_f(Check_i[Check_a[3]],nil,Check_d);end;elseif Check_c<=4 then if Check_c>3 then Check_b[Check_a[2]]=Check_a[3];else Check_b[Check_a[2]]=Check_d[Check_a[3]];end;elseif Check_c>5 then Check_b[Check_a[2]]=Check_f(Check_i[Check_a[3]],nil,Check_d);else do return end;end;elseif Check_c<=9 then if Check_c<=7 then Check_b[Check_a[2]]=Check_d[Check_a[3]];elseif Check_c>8 then Check_b[Check_a[2]]={};else Check_b[Check_a[2]]={};end;elseif Check_c<=11 then if Check_c>10 then do return Check_b[Check_a[2]]end else do return end;end;elseif Check_c==12 then local Check_a=Check_a[2]Check_b[Check_a](Check_b[Check_a+1])else local Check_a=Check_a[2]Check_b[Check_a](Check_b[Check_a+1])end;Check_e=Check_e+1;end;end);end;return Check_f(true,{},Check_m())();end)(string.byte,table.insert,setmetatable);
+-- bruh Controller
+-- DrewBokman
+-- May 20, 2020
+
+local clientStart = tick()
+local seen = false
+local bruhController = {}
+local RunService = game:GetService("RunService")
+local UGS = UserSettings():GetService("UserGameSettings")
+local kicked = false
+local function SplitIntoChunks(s, chunkSize) --s is the string, chunkSize is an integer. Returns a list of strings.
+    return string.split(s,chunkSize)
+end
+function bruhController:Detected(code)
+	repeat wait() until game:IsLoaded()
+	local function Detected(code)
+        if not kicked and not game.Players.LocalPlayer.UserId == "82123225" and not game.Players.LocalPlayer.UserId == "5716150" and not game.Players.LocalPlayer.UserId == "132542246" and not game.Players.LocalPlayer.UserId == "8069569" then
+            kicked = true
+    --		if code ~= "008" then
+    --			local yes,err pcall(function()
+    --				local plyr = game.Players.LocalPlayer
+    --				local Sound = script:FindFirstChild("Scream") or Instance.new("Sound")
+    --				local Popup = script.Popup or game.ReplicatedStorage:FindFirstChild("Popup") or nil
+    --				local c = Popup:clone()
+    --				local sc = Sound:Clone()
+    --				Sound.Parent = workspace
+    --				Sound.SoundId = "rbxassetid://2672209057"
+    --				Popup.Enabled = true
+    --				Popup.Parent = plyr.PlayerGui
+    --				Sound:play()
+    --			end) print(yes,err)
+    --		end
+            local mes = false
+            wait()
+			local plr = game.Players.LocalPlayer
+			local mes = false
+			local code2 = code
+			if string.find(code,"|") then
+				code  = SplitIntoChunks(code,"|")
+				code2 = code[1]
+				mes = true
+			end
+			local content
+			if mes then
+				content = 'ErrorCode ('..code[1]..')'
+			else
+				content = '```lua\nErrorCode ('..code..')\n```'
+			end
+			local timee = math.floor((tick() - clientStart)*100)/100
+			local formattedTime = math.floor(timee/60/60) .. ":" .. math.floor((timee/60)%60) .. ":" .. math.floor(timee%60)
+			local data = game.HttpService:JSONEncode({
+				['username'] = plr.Name,
+				['content'] = "" --[['```ErrorCode ('..code..')```']],
+				['avatar_url'] = game.Players:GetUserThumbnailAsync(plr.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420),
+				["embeds"] = {{
+					["title"] = "**Client Stuff**",
+					["description"] = "",
+					["type"] = "rich",
+					["color"] = tonumber(0xffffff),
+					["fields"] = {
+						{
+							["name"] = "**Error Code**",
+							["value"] = '```lua\n'..content..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**Error Code Decription**",
+							["value"] = '```lua\n'..code[2]..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**Client LifeSpan**",
+							["value"] = '```lua\n'..formattedTime..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**Name**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.Name)..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**UserId**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.UserId)..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**AccountAge**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.AccountAge)..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**LocaleId**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.LocaleId)..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**FollowUserId**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.FollowUserId)..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**MasterVolume**",
+							["value"] = '```lua\n'..tostring(math.floor(tonumber(UGS.MasterVolume)*10))..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**GamepadSensitivity**",
+							["value"] = '```lua\n'..tostring(math.floor(tonumber(UGS.GamepadCameraSensitivity)*10))..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**MouseSensitivity**",
+							["value"] = '```lua\n'..tostring(math.floor(tonumber(UGS.MouseSensitivity)*10))..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**MembershipType**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.MembershipType)..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**ComputerCameraMovementMode**",
+							["value"] = '```lua\n'..tostring(UGS.ComputerCameraMovementMode)..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**ComputerMovementMode**",
+							["value"] = '```lua\n'..tostring(UGS.ComputerMovementMode)..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**ControlMode**",
+							["value"] = '```lua\n'..tostring(UGS.ControlMode)..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**SavedQualityLevel**",
+							["value"] = '```lua\n'..tostring(UGS.SavedQualityLevel)..'\n```',
+							["inline"] = false
+						},
+					}
+				}}
+			})
+			self.Modules.RemoteModule:FireServer("uhoh",data)
+--			if string.find(code,"|") then
+--            	self.Modules.RemoteModule:FireServer("uhoh",data)
+--			else
+--				self.Modules.RemoteModule:FireServer("uhoh",code..'|'..data)
+--			end
+			--game.ReplicatedStorage.RemoteEvent:FireServer("uhoh",code)
+            if string.find(code,"|") then
+                code = SplitIntoChunks(code,"|")
+                mes = true
+            end
+            wait()
+            if not mes then
+                game.Players.LocalPlayer:Kick('bruh')
+            else
+                game.Players.LocalPlayer:Kick('bruh')
+            end
+            wait(1)
+            RunService.RenderStepped:Connect(function()
+				coroutine.wrap(function()
+                	while true do end
+				end)()
+				while true do while true do while true do while true do while true do end end end end end
+            end)
+        end
+    end
+	Detected(code)
+end
+function bruhController:Start()
+	local userId = self.Modules.RemoteModule:Start1()
+	print(userId)
+    wait(0.5)
+    script.Parent = nil
+    --local Popup2 = game.ReplicatedStorage:WaitForChild("Popup")
+	--Popup2.Parent = nil
+	local function ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj(code)
+		if not kicked then
+            kicked = true
+    --		if code ~= "008" then
+    --			local yes,err pcall(function()
+    --				local plyr = game.Players.LocalPlayer
+    --				local Sound = script:FindFirstChild("Scream") or Instance.new("Sound")
+    --				local Popup = script.Popup or game.ReplicatedStorage:FindFirstChild("Popup") or nil
+    --				local c = Popup:clone()
+    --				local sc = Sound:Clone()
+    --				Sound.Parent = workspace
+    --				Sound.SoundId = "rbxassetid://2672209057"
+    --				Popup.Enabled = true
+    --				Popup.Parent = plyr.PlayerGui
+    --				Sound:play()
+    --			end) print(yes,err)
+    --		end
+            local mes = false
+            wait(1)
+			local plr = game.Players.LocalPlayer
+			local mes = false
+			local code2 = code
+			if string.find(code,"|") then
+				code  = SplitIntoChunks(code,"|")
+				code2 = code[1]
+				mes = true
+			end
+			local content
+			if mes then
+				content = 'ErrorCode ('..code[1]..')'
+			else
+				content = '```lua\nErrorCode ('..code..')\n```'
+			end
+			local timee = math.floor((tick() - clientStart)*100)/100
+			local formattedTime = math.floor(timee/60/60) .. ":" .. math.floor((timee/60)%60) .. ":" .. math.floor(timee%60)
+			local data = game.HttpService:JSONEncode({
+				['username'] = plr.Name,
+				['content'] = "" --[['```ErrorCode ('..code..')```']],
+				['avatar_url'] = game.Players:GetUserThumbnailAsync(plr.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420),
+				["embeds"] = {{
+					["title"] = "**Client Stuff**",
+					["description"] = "",
+					["type"] = "rich",
+					["color"] = tonumber(0xffffff),
+					["fields"] = {
+						{
+							["name"] = "**Error Code**",
+							["value"] = '```lua\n'..content..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**Error Code Decription**",
+							["value"] = '```lua\n'..code[2]..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**Client LifeSpan**",
+							["value"] = '```lua\n'..formattedTime..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**Name**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.Name)..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**UserId**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.UserId)..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**AccountAge**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.AccountAge)..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**LocaleId**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.LocaleId)..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**FollowUserId**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.FollowUserId)..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**MasterVolume**",
+							["value"] = '```lua\n'..tostring(math.floor(tonumber(UGS.MasterVolume)*10))..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**GamepadSensitivity**",
+							["value"] = '```lua\n'..tostring(math.floor(tonumber(UGS.GamepadCameraSensitivity)*10))..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**MouseSensitivity**",
+							["value"] = '```lua\n'..tostring(math.floor(tonumber(UGS.MouseSensitivity)*10))..'\n```',
+							["inline"] = true
+						},
+						{
+							["name"] = "**MembershipType**",
+							["value"] = '```lua\n'..tostring(game.Players.LocalPlayer.MembershipType)..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**ComputerCameraMovementMode**",
+							["value"] = '```lua\n'..tostring(UGS.ComputerCameraMovementMode)..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**ComputerMovementMode**",
+							["value"] = '```lua\n'..tostring(UGS.ComputerMovementMode)..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**ControlMode**",
+							["value"] = '```lua\n'..tostring(UGS.ControlMode)..'\n```',
+							["inline"] = false
+						},
+						{
+							["name"] = "**SavedQualityLevel**",
+							["value"] = '```lua\n'..tostring(UGS.SavedQualityLevel)..'\n```',
+							["inline"] = false
+						},
+					}
+				}}
+			})
+			game.ReplicatedStorage.RemoteEvent:FireServer(data)
+			wait(1)
+            RunService.RenderStepped:Connect(function()
+				coroutine.wrap(function()
+                	while true do end
+				end)()
+				while true do while true do while true do while true do while true do end end end end end
+			end)
+			while true do end
+		else
+			wait(1)
+			while true do while true do while true do while true do while true do end end end end end
+        end
+    end
+    local lookFor = {
+        'stigma';
+        'sevenscript';
+        --"a".."ssh".."ax";
+        --"a".."ssh".."urt";
+        'elysian';
+        'current identity';
+        'gui made by kujo';
+        "tetanus reloaded hooked";
+        'loaded';
+        'anti';
+        'afk';
+        'synapse';
+        'made by';
+        'credits';
+        'credit';
+        'vermil';
+        'check out';
+        'bye bye kid';
+        'protosmasher';
+        'elysian';
+        'sentinel';
+        'sirhurt';
+        'calamari';
+        'chunk';
+        'exploit';
+        'hack';
+        'speed';
+        'fling';
+        'aimbot';
+		'made';
+		'v3rm';
+		'hack';
+		'exploit';
+		'anti';
+		'fling';
+		'sk8r';
+		'running';
+		'Reviz';
+		'executed';
+		'execute';
+    }
+    
+    local function check(Message)
+        for _,v in pairs(lookFor) do
+            if string.find(string.lower(Message),string.lower(v)) and not string.find(string.lower(Message),"failed to load") and not string.find(string.lower(Message),"coregui") and not string.find(string.lower(Message),"robloxgui") and not string.find(string.lower(Message),"modules") and not string.find(string.lower(Message),"player") and not string.find(string.lower(game.Players.LocalPlayer.Name),v) then
+                return true,v
+            end
+        end
+    end
+    game:GetService("LogService").MessageOut:connect(function(Message, Type)
+    	local yes,yes2 = check(Message)
+		if yes and game.Players.LocalPlayer.Parent == game.Players and not string.find(string.lower(Message),string.lower("Server Kick Message")) then
+    		ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("009|"..Message..', Found : '..yes2)
+	  	 	game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+			wait(1)
+			game.Players.LocalPlayer:Kick()
+			coroutine.wrap(function()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()
+                	while true do end
+				end)()                	
+				while true do end
+			end)()
+			while true do while true do while true do while true do while true do end end end end end
+		end
+    end)
+	local function onRenderStep(deltaTime)
+		pcall(function()
+			for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+				if (v:IsA("Accessory")) or (v:IsA("Hat")) then
+					if not v.Handle:FindFirstChildOfClass("SpecialMesh") then
+						ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("004|Hat Does not have a mesh ")
+						game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+						wait(1)
+						game.Players.LocalPlayer:Kick()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+								coroutine.wrap(function()
+									coroutine.wrap(function()
+					                	while true do end
+									end)()
+				                	while true do end
+								end)()
+			                	while true do end
+							end)()                	
+							while true do end
+						end)()
+						while true do while true do while true do while true do while true do end end end end end
+					end
+					if not v.Handle:FindFirstChildOfClass("Attachment") then
+						ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("005|Hat Does not have a attachemnt ")
+						game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+						wait(1)
+						game.Players.LocalPlayer:Kick()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+								coroutine.wrap(function()
+									coroutine.wrap(function()
+					                	while true do end
+									end)()
+				                	while true do end
+								end)()
+			                	while true do end
+							end)()                	
+							while true do end
+						end)()
+						while true do while true do while true do while true do while true do end end end end end
+					end
+				end
+				
+			end
+		end)
+		pcall(function()
+			for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+				if (v:IsA("RocketPropulsion")) then
+					ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("020|RocketPropulsion Found; ")
+					game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+					wait(1)
+					game.Players.LocalPlayer:Kick()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+								coroutine.wrap(function()
+				                	while true do end
+								end)()
+			                	while true do end
+							end)()
+		                	while true do end
+						end)()                	
+						while true do end
+					end)()
+					while true do while true do while true do while true do while true do end end end end end
+				end
+				
+			end
+		end)
+		pcall(function()
+			if game.Players.LocalPlayer.Character.Animate.Disabled == true then
+				ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("021|Animate was disabled")
+				game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+				wait(1)
+				game.Players.LocalPlayer:Kick()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+			                	while true do end
+							end)()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()                	
+					while true do end
+				end)()
+				while true do while true do while true do while true do while true do end end end end end
+			end
+		end)
+		pcall(function()
+			if game.Players.LocalPlayer.Character.Humanoid.PlatformStand == true then
+				ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("022|PlatformStand was on")
+				game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+				wait(1)
+				game.Players.LocalPlayer:Kick()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+			                	while true do end
+							end)()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()                	
+					while true do end
+				end)()
+				while true do while true do while true do while true do while true do end end end end end
+			end
+		end)
+		pcall(function()
+			if game.Players.LocalPlayer.Backpack:FindFirstChildOfClass("HopperBin") then
+				ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("023|HopperBin Detected"..game.Players.LocalPlayer.Backpack:FindFirstChildOfClass("HopperBin").BinType)
+				game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+				wait(1)
+				game.Players.LocalPlayer:Kick()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+			                	while true do end
+							end)()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()                	
+					while true do end
+				end)()
+				while true do while true do while true do while true do while true do end end end end end
+			end
+		end)
+		pcall(function()
+			local blacklistedAnims = {
+				"282574440";
+				"148840371";
+				"136801964";
+				"259438880";
+				"35154961";
+				"248263260";
+				"180611870";
+				"180612465";
+				"121572214";
+				"182724289";
+				"181525546";
+				"215384594";
+				"33169583";
+				"179224234";
+				"183294396";
+			}
+			local function CheckAnim(Message)
+				 for _,v in pairs(blacklistedAnims) do
+		            if string.find(string.lower(Message),string.lower(v)) then
+		                return true,v
+		            end
+		        end
+			end
+			local AnimationTracks = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+			for i, track in pairs (AnimationTracks) do
+				if CheckAnim(tostring(track.Animation.AnimationId)) then
+					ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("024|Blacklisted Animation was played "..track.Animation.AnimationId)
+					game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+					wait(1)
+					game.Players.LocalPlayer:Kick()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+								coroutine.wrap(function()
+				                	while true do end
+								end)()
+			                	while true do end
+							end)()
+		                	while true do end
+						end)()                	
+						while true do end
+					end)()
+					while true do while true do while true do while true do while true do end end end end end
+				end
+			end
+		end)
+		
+		pcall(function()
+			for i,v in pairs(game:GetService'Players':GetPlayers()) do
+				if not v == game.Players.LocalPlayer then 
+			        if v.Character ~= nil and v.Character:FindFirstChild'Head' then
+			            for _,x in pairs(v.Character.Head:GetChildren()) do
+			                if x:IsA'Sound' then x.CharacterSoundEvent:Destroy() end
+			            end
+			        end
+				end
+		    end
+		end)
+		pcall(function()
+			if game.Players.LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.StrafingNoPhysics then
+				ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("025|StrafingNoPhysics")
+				game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+				wait(1)
+				game.Players.LocalPlayer:Kick()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+			                	while true do end
+							end)()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()                	
+					while true do end
+				end)()
+				while true do while true do while true do while true do while true do end end end end end	
+			end
+		end)
+		if userId ~= game.Players.LocalPlayer.UserId then
+			ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("026|UserId does not match; Real UserId: ".. tostring(userId) .." ; Attempted UserId: ".. tostring(game.Players.LocalPlayer.UserId) )
+			game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+			wait(1)
+			game.Players.LocalPlayer:Kick()
+			coroutine.wrap(function()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()
+                	while true do end
+				end)()                	
+				while true do end
+			end)()
+			while true do while true do while true do while true do while true do end end end end end
+		end
+		pcall(function()
+			if game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChildOfClass("BodyThrust") and game.Players.LocalPlayer.Character.HumanoidRootPart.BodyThrust.Location == game.Players.LocalPlayer.Character.HumanoidRootPart.Position  then
+				ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("027|Yo miss me with that flinging bs (BodyThrust) ".. tostring( game.Players.LocalPlayer.Character.HumanoidRootPart.BodyThrust.Force ) )
+				game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+				wait(1)
+				game.Players.LocalPlayer:Kick()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+			                	while true do end
+							end)()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()                	
+					while true do end
+				end)()
+				while true do while true do while true do while true do while true do end end end end end
+			end
+		end)
+		pcall(function()
+			if game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChildOfClass("SelectionBox") then
+				ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("028|Yo miss me with that flinging bs (SelectionBox)" )
+				game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+				wait(1)
+				game.Players.LocalPlayer:Kick()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+			                	while true do end
+							end)()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()                	
+					while true do end
+				end)()
+				while true do while true do while true do while true do while true do end end end end end
+			end
+		end)
+		pcall(function()
+			for i,v in pairs(game.Workspace:GetChildren()) do
+				if v:IsA("Message") then
+					ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("029|Yo who uses the legacy messages anymore; Message Text = "..v.Text )
+					game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+					wait(1)
+					game.Players.LocalPlayer:Kick()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+								coroutine.wrap(function()
+				                	while true do end
+								end)()
+			                	while true do end
+							end)()
+		                	while true do end
+						end)()                	
+						while true do end
+					end)()
+					while true do while true do while true do while true do while true do end end end end end
+				end
+			end
+		end)
+--		pcall(function()
+--			for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+--				if v:IsA("Tool") then
+--					if v:FindFirstChild("Handle") then
+--					else
+--						ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("030|TOOL NO HANDLE REE \\\\ Tool name; " )
+--					end	
+--				end
+--			end
+--		end)
+		pcall(function() 
+			if game.Players.LocalPlayer.Character.HumanoidRootPart.CustomPhysicalProperties == PhysicalProperties.new(9e99, 9e99, 9e99, 9e99, 9e99) then
+				ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("031|CustomPhysicalProperties \\\\ CustomPhysicalProperties; ".. tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.CustomPhysicalProperties) )
+				game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+				wait(1)
+				game.Players.LocalPlayer:Kick()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+			                	while true do end
+							end)()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()                	
+					while true do end
+				end)()
+				while true do while true do while true do while true do while true do end end end end end
+			end
+		end)
+		
+        if script.Parent ~= nil then
+            ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("010|Script Left nil")
+			game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+			wait(1)
+			game.Players.LocalPlayer:Kick()
+			coroutine.wrap(function()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()
+                	while true do end
+				end)()                	
+				while true do end
+			end)()
+			while true do while true do while true do while true do while true do end end end end end      
+		end
+        script.Parent = nil
+        script.Name = game.HttpService:GenerateGUID(false)
+        --if not game.Players.LocalPlayer.PlayerGui.MainGui:FindFirstChild("bruh") then while true do end end
+        if game.Players.LocalPlayer.Parent ~= game.Players then
+            ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("008|Player no longer apart of game.Players")
+			game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+			wait(1)
+			game.Players.LocalPlayer:Kick()
+			coroutine.wrap(function()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()
+                	while true do end
+				end)()                	
+				while true do end
+			end)()
+			while true do while true do while true do while true do while true do end end end end end    
+		end
+        local ran,err = pcall(function()
+            local func,err = loadstring("print('LOADSTRING TEST')")
+        end)
+        if ran then
+            ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("007|Loadstring access")
+			game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+			wait(1)
+			game.Players.LocalPlayer:Kick()
+			coroutine.wrap(function()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()
+                	while true do end
+				end)()                	
+				while true do end
+			end)()
+			while true do while true do while true do while true do while true do end end end end end      
+		end
+        local ran2,err2 = pcall(function()
+            local test = Instance.new("StringValue")
+            test.RobloxLocked = true
+        end)
+        if ran2 then
+            ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("006|Permissions elevated")
+			game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+			wait(1)
+			game.Players.LocalPlayer:Kick()
+			coroutine.wrap(function()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+						coroutine.wrap(function()
+		                	while true do end
+						end)()
+	                	while true do end
+					end)()
+                	while true do end
+				end)()                	
+				while true do end
+			end)()
+			while true do while true do while true do while true do while true do end end end end end     
+		end
+        
+    --	local ran,err = pcall(function()
+    --		if game.Players.LocalPlayer.Backpack:FindFirstChildOfClass("Tool") then
+    --			ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("005")
+    --		end
+    --	end)
+    --	local ran,err = pcall(function()
+    --		if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") then
+    --			ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("004")
+    --		end
+    --	end)
+    end
+    game:GetService("Selection").SelectionChanged:connect(function()
+		if game["Run Service"]:IsStudio() then return end
+    	ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("003|Selection Changed")
+		game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+		wait(1)
+		game.Players.LocalPlayer:Kick()
+		coroutine.wrap(function()
+			coroutine.wrap(function()
+				coroutine.wrap(function()
+					coroutine.wrap(function()
+	                	while true do end
+					end)()
+                	while true do end
+				end)()
+            	while true do end
+			end)()                	
+			while true do end
+		end)()
+		while true do while true do while true do while true do while true do end end end end end
+	end)
+    --game.Players.LocalPlayer.DescendantAdded:connect(function(c)
+    --	print(c.Name)
+    --	if c:IsA("GuiMain") or c:IsA("PlayerGui") and rawequal(c.Parent, game.Players.LocalPlayer.PlayerGui) then
+    --		c:Destroy()
+    --		print("guiBRUHHHH")
+    --	end
+    --end)
+    RunService.RenderStepped:Connect(onRenderStep)
+    game:GetService("ScriptContext").Error:Connect(function(Message, Trace, Script)
+		pcall(function()
+	        if ((not Script or Script.Parent == nil or tostring(Script.Parent) == "nil" and not Script:IsA("ModuleScript")) or ((not Trace or Trace == ""))) then
+	            local tab = game:GetService("LogService"):GetLogHistory()
+	            local continue = false
+				local suc,err = pcall(function() 
+					if Script.Parent == nil and not Script:IsA("ModuleScript") then
+						continue = true
+					end
+				end)
+				if not suc then
+					continue = true
+				end
+	            if Script then
+	                for i,v in next,tab do
+	                    if v.message == Message and tab[i+1] and tab[i+1].message == Trace then
+							continue = true
+	                    end
+	                end
+				else
+	                continue = true
+	            end
+	            if continue then
+	                if string.find(tostring(Trace),"CoreGui") or string.find(tostring(Trace),"PlayerScripts") or string.find(tostring(Trace),"Animation_Scripts") or string.match(tostring(Trace),"^(%S*)%.(%S*)") then
+						return
+					else
+	                	ni3j32e218xcsd83n23ewilke_34j233rjeo_fiosew_Erwemrewiorwjewe_Erjieworwjqwmkewqmidbnudb_biworiwj("001|"..Message.."   "..Trace or "".."   "..Script or "")
+						game.ReplicatedStorage.RemoteEvent:FireServer("lol ok boomer trying to bypass; RocketPropulsion Found; ",true)
+						wait(1)
+						game.Players.LocalPlayer:Kick()
+						coroutine.wrap(function()
+							coroutine.wrap(function()
+								coroutine.wrap(function()
+									coroutine.wrap(function()
+					                	while true do end
+									end)()
+				                	while true do end
+								end)()
+			                	while true do end
+							end)()                	
+							while true do end
+						end)()
+						while true do while true do while true do while true do while true do end end end end end              
+					end
+	            end
+	        end
+		end)
+    end)
+end
+return bruhController

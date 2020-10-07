@@ -5,29 +5,29 @@ local Debris = game:GetService("Debris")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local FastCast = require(ReplicatedStorage.Aero.Shared.FastCastRedux)
 local AR = {
-	auto = true,
+	auto = false,
 	WeaponEssentails = ReplicatedStorage.WeaponEssentails[script.Name],
 	WeaponCaster = FastCast.new(),
     -------------Config-------------
-    DAMAGE = 10,
-    HEADSHOT_MULTIPLIER = 1.5,
-    RELOAD_TIME = 2,
-    TOTAL_ROUNDS = 600,
-    ROUNDS_PER_MAG = 30,
-    BULLET_SPEED = 750,
-    BULLET_MAXDIST = 1000,
+    DAMAGE = 115,
+    HEADSHOT_MULTIPLIER = 1,
+    RELOAD_TIME = 1,
+    TOTAL_ROUNDS = 15,
+    ROUNDS_PER_MAG = 1,
+    BULLET_SPEED = 1600,
+    BULLET_MAXDIST = 400,
     BULLET_GRAVITY = Vector3.new(0, -30, 0),
     --Spread--
-    MIN_BULLET_SPREAD_ANGLE = 1.88,
-    MAX_BULLET_SPREAD_ANGLE = 4,
+    MIN_BULLET_SPREAD_ANGLE = 0,
+    MAX_BULLET_SPREAD_ANGLE = 0.25,
 
     ADS_MIN_BULLET_SPREAD_ANGLE = 0,
-    ADS_MAX_BULLET_SPREAD_ANGLE = 1,
+    ADS_MAX_BULLET_SPREAD_ANGLE = 0.15,
 
     CROUCH_MIN_BULLET_SPREAD_ANGLE = 0,
-    CROUCH_MAX_BULLET_SPREAD_ANGLE = 0.25,
+    CROUCH_MAX_BULLET_SPREAD_ANGLE = 0.1,
     ----------
-    RPM = 600,
+    RPM = 50,
     PIERCE_DEMO = true,
     SHOTGUN = false,
 	SHOTGUN_SHOTS = 10,
