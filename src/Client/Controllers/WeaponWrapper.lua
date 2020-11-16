@@ -75,8 +75,9 @@ function WeaponWrapper:Start()
     local aiming = false
     if not replicatingFire then
 		self.Services.WeaponWrapper.ReplicateFire:Connect(function(GunFirePoint, direction, modifiedBulletSpeed, bullet, Ignore, bool, BULLET_GRAVITY, clientThatFired, WeaponName)
+            if clientThatFired == game.Players.LocalPlayer then return end
             local Settings = self.Shared.WeaponSettings[WeaponName] 
-			Settings.Client:Fire(GunFirePoint, direction, modifiedBulletSpeed, bullet, Ignore, bool, BULLET_GRAVITY, clientThatFired, WeaponName)
+            Settings.Client:Fire(GunFirePoint, direction, modifiedBulletSpeed, bullet, Ignore, bool, BULLET_GRAVITY, clientThatFired, WeaponName)
         end)
         self.Services.WeaponWrapper.ReplicateAmmo:Connect(function(AmmoData)
             self.Player.PlayerGui.ScreenGui.TextLabel.Text = AmmoData[game.Players.LocalPlayer.Gun.Value.Name].Current .." | ".. AmmoData[game.Players.LocalPlayer.Gun.Value.Name].Spare
@@ -84,7 +85,6 @@ function WeaponWrapper:Start()
     end
     local function RefreshAmmoData()
         AmmoData = self.Modules.RemoteModule:FireServer("GetAmmoInfo")
-        print(AmmoData)
         AmmoData = game:GetService("HttpService"):JSONDecode(AmmoData)
         self.Player.PlayerGui.ScreenGui.TextLabel.Text = AmmoData[1] .." | ".. AmmoData[2]
     end
@@ -96,7 +96,6 @@ function WeaponWrapper:Start()
     end
     inputs = self.Modules.InputService
     local Weps = self.Modules.RemoteModule:FireServer("New")
-    print(Weps,typeof(Weps))
     Weps = game:GetService("HttpService"):JSONDecode(Weps)
     for i,v in pairs(Weps[1]) do
         local working
@@ -142,6 +141,10 @@ function WeaponWrapper:Start()
                     while firing do
                         wait()
                         -- self.Modules.RemoteModule:LowImpactFireServer("Fire",{workspace.CurrentCamera.CFrame.LookVector.x,workspace.CurrentCamera.CFrame.LookVector.y,workspace.CurrentCamera.CFrame.LookVector.z}, aiming, game.Players.LocalPlayer.Character.Crouching.Value)
+                        do
+                            local Settings = self.Shared.WeaponSettings[WeaponName] 
+                            Settings.Client:Fire(GunFirePoint, direction, modifiedBulletSpeed, bullet, Ignore, bool, BULLET_GRAVITY, clientThatFired, WeaponName)
+                        end
                         self.Services.WeaponWrapper:Fire(workspace.CurrentCamera.CFrame.LookVector, aiming, game.Players.LocalPlayer.Character.Crouching.Value)
                         RefreshAmmoData()
                     end
@@ -194,7 +197,6 @@ function WeaponWrapper:Start()
     end
     local reloading = false
     function Reload()
-        print("reload")
         if reloading then return end
         if AmmoData[2] <= 0 then return end
         reloading = true
@@ -202,7 +204,6 @@ function WeaponWrapper:Start()
             reloading = false
         end)
         local reloadTime = self.Modules.RemoteModule:FireServer("Reload","Ye")
-        print(reloadTime)
         -- local reloadTime = self.Services.WeaponWrapper:Reload()
         delay(reloadTime,function()
             RefreshAmmoData()

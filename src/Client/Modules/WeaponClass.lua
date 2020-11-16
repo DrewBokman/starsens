@@ -75,13 +75,52 @@ local function Tween(Time,Goal,Thing,Wait,Style,Direction)
 	return Tween
 end
 
-function WeaponClass:Fire(FirePointObject,direction,modifiedBulletSpeed,bullet,ignore,bool,BULLET_GRAVITY,clientThatFired)
-	bullet:WaitForChild("CylinderHandleAdornment").Enabled = true
-	bullet:WaitForChild("BillboardGui").Enabled = true
-	bullet:WaitForChild("BillboardGui").Size = UDim2.fromScale(0,0)
-	Tween(5,{Size = UDim2.fromScale(30,30)},bullet:WaitForChild("BillboardGui"))
-	bullet.CFrame = CFrame.new(FirePointObject.WorldPosition, FirePointObject.WorldPosition + direction)
-	Caster:Fire(FirePointObject.WorldPosition,direction,modifiedBulletSpeed,bullet,ignore,bool,BULLET_GRAVITY,funcGo,clientThatFired)
+function WeaponClass:Fire(direction, clientThatFired, Aiming, Crouching)
+	-- direction = Vector3.new(tonumber(direction[1]),tonumber(direction[2]),tonumber(direction[3]))
+	if self.Reloading then return end
+	if Crouching and Aiming then
+		self.MinSpread = self.WeaponConfig.CROUCH_MIN_BULLET_SPREAD_ANGLE
+		self.MaxSpread = self.WeaponConfig.CROUCH_MAX_BULLET_SPREAD_ANGLE
+	elseif Aiming then
+		self.MinSpread = self.WeaponConfig.ADS_MIN_BULLET_SPREAD_ANGLE
+		self.MaxSpread = self.WeaponConfig.ADS_MAX_BULLET_SPREAD_ANGLE
+	else
+		self.MinSpread = self.WeaponConfig.MIN_BULLET_SPREAD_ANGLE
+		self.MaxSpread = self.WeaponConfig.MAX_BULLET_SPREAD_ANGLE
+	end
+	if self.WeaponPart.Parent:IsA("Backpack") then return end
+	if self.WeaponConfig.SHOTGUN then
+		for i=1,self.WeaponConfig.SHOTGUN_SHOTS do
+			local directionalCF = CFrame.new(Vector3.new(), direction)
+			local direction = (directionalCF * CFrame.fromOrientation(0, 0, RNG:NextNumber(0, TAU)) * CFrame.fromOrientation(math.rad(RNG:NextNumber(self.MinSpread, self.MaxSpread)), 0, 0)).LookVector
+			local humanoidRootPart = self.WeaponPart.Parent:WaitForChild("HumanoidRootPart", 1)
+			local modifiedBulletSpeed = (direction * self.WeaponConfig.BULLET_SPEED)
+			local bullet = self.cache:GetPart()
+			if self.WeaponConfig.PIERCE_DEMO then
+				local bulletID = game:GetService("HttpService"):GenerateGUID(false)
+				
+				self.WeaponCaster:Fire(self.WeaponPart.Handle.GunFirePoint.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, self.WeaponConfig.Server.CanRayPierce, clientThatFired, self.cache)
+				return self.WeaponPart.Handle.GunFirePoint, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired, self.WeaponName
+			else
+				self.WeaponCaster:Fire(self.WeaponPart.Handle.GunFirePoint.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, nil, self.clientThatFired, self.cache)
+				return self.WeaponPart.Handle.GunFirePoint, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired, self.WeaponName
+			end
+		end
+	else
+		local directionalCF = CFrame.new(Vector3.new(), direction)
+		local direction = (directionalCF * CFrame.fromOrientation(0, 0, RNG:NextNumber(0, TAU)) * CFrame.fromOrientation(math.rad(RNG:NextNumber(self.MinSpread, self.MaxSpread)), 0, 0)).LookVector
+		local humanoidRootPart = self.WeaponPart.Parent:WaitForChild("HumanoidRootPart", 1)
+		local modifiedBulletSpeed = (direction * self.WeaponConfig.BULLET_SPEED)
+		local bullet = self.cache:GetPart()
+		if self.PIERCE_DEMO then
+			self.WeaponCaster:Fire(self.WeaponPart.Handle.GunFirePoint.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, self.WeaponConfig.Server.CanRayPierce, clientThatFired, self.cache)
+			return self.WeaponPart.Handle.GunFirePoint, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired, self.WeaponName
+		else
+			self.WeaponCaster:Fire(self.WeaponPart.Handle.GunFirePoint.WorldPosition, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, nil, clientThatFired, self.cache)
+			return self.WeaponPart.Handle.GunFirePoint, direction * self.WeaponConfig.BULLET_MAXDIST, modifiedBulletSpeed, bullet, self.WeaponPart.Parent, false, self.WeaponConfig.BULLET_GRAVITY, clientThatFired, self.WeaponName
+		end
+	end
+	--PlayFireSound()
 end
 
 function WeaponClass:Reload()

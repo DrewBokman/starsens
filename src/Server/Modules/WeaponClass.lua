@@ -137,10 +137,10 @@ function WeaponClass:Fire(direction, clientThatFired, Aiming, Crouching)
 	--PlayFireSound()
 end
 
-function WeaponClass:Reload()
-	if self.Mags <=0 then return end
---	if player.Character.Running.Value == true then return end
-	local AddedRounds = self.WeaponConfig.ROUNDS_PER_MAG
+function WeaponClass:Reload() return end
+	local AddedRounds = self.Weap
+	if self.Mags <=0 then return end.Value == true th
+--	if player.Character.RunningonConfig.ROUNDS_PER_MAG
 	self.Mags += self.Rounds
 	self.Rounds = 0
 	self.Reloading = true
@@ -171,7 +171,6 @@ function WeaponClass:Reload()
 end
 
 function WeaponClass.OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, cache)
-	print(cache)
 	self.WeaponConfig.Server:OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, cache)
 end
 
