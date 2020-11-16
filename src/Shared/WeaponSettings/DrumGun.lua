@@ -9,25 +9,25 @@ local AR = {
 	WeaponEssentails = ReplicatedStorage.WeaponEssentails[script.Name],
 	WeaponCaster = FastCast.new(),
     -------------Config-------------
-    DAMAGE = 10,
-    HEADSHOT_MULTIPLIER = 1.5,
+    DAMAGE = 9,
+    HEADSHOT_MULTIPLIER = 2,
     RELOAD_TIME = 2,
-    TOTAL_ROUNDS = 600,
-    ROUNDS_PER_MAG = 30,
-    BULLET_SPEED = 750,
-    BULLET_MAXDIST = 1000,
+    TOTAL_ROUNDS = 1000,
+    ROUNDS_PER_MAG = 100,
+    BULLET_SPEED = 400,
+    BULLET_MAXDIST = 400,
     BULLET_GRAVITY = Vector3.new(0, -30, 0),
     --Spread--
-    MIN_BULLET_SPREAD_ANGLE = 1.88,
+    MIN_BULLET_SPREAD_ANGLE = 3,
     MAX_BULLET_SPREAD_ANGLE = 4,
 
-    ADS_MIN_BULLET_SPREAD_ANGLE = 0,
-    ADS_MAX_BULLET_SPREAD_ANGLE = 1,
+    ADS_MIN_BULLET_SPREAD_ANGLE = 1,
+    ADS_MAX_BULLET_SPREAD_ANGLE = 2,
 
-    CROUCH_MIN_BULLET_SPREAD_ANGLE = 0,
-    CROUCH_MAX_BULLET_SPREAD_ANGLE = 0.25,
+    CROUCH_MIN_BULLET_SPREAD_ANGLE = 0.25,
+    CROUCH_MAX_BULLET_SPREAD_ANGLE = 1,
     ----------
-    RPM = 600,
+    RPM = 900,
     PIERCE_DEMO = true,
     SHOTGUN = false,
 	SHOTGUN_SHOTS = 10,
@@ -37,29 +37,29 @@ local AR = {
 	--Animations--
 	Animations = {
 		["Torso"] = {
-			[1] = {"rbxassetid://5953177004", 20},
-			[2] = {"rbxassetid://5953355331", 1},
+			[1] = "rbxassetid://5953177004, 20",
+			[2] = "rbxassetid://5953355331, 1",
 			
 		},
 		["Head"]  = {
-			[1] = {"rbxassetid://5952985208", 1},
-			[2] = {"rbxassetid://5952985846", 1},
+			[1] = "rbxassetid://5952985208, 1",
+			[2] = "rbxassetid://5952985846, 1",
 			
 		},
 		["Right Arm"]  = {
-			[1] = {"rbxassetid://5952980640", 1},
+			[1] = "rbxassetid://5952980640, 1",
 			
 		},
 		["Left Arm"]  = {
-			[1] = {"rbxassetid://5952979583", 1},
+			[1] = "rbxassetid://5952979583, 1",
 			
 		},
 		["Right Leg"]  = {
-			[1] = {"rbxassetid://5952983915", 1},
+			[1] = "rbxassetid://5952983915, 1",
 			
 		},
 		["Left Leg"] = {
-			[1] = {"rbxassetid://5952975428", 1},
+			[1] = "rbxassetid://5952975428, 1",
 		}
 	},
 	---------------------------------
@@ -330,50 +330,41 @@ function ServerTbl.CanRayPierce(hitPart, hitPoint, normal, material, segmentVelo
 	end
 	return false
 end
-local rand = Random.new()
+
 function ServerTbl.OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, ClientThatFired, cache)
 	if hitPart ~= nil and hitPart.Parent ~= nil then
 		local humanoid = hitPart.Parent:FindFirstChildOfClass("Humanoid")
 		if humanoid then
-			if humanoid.Health == 48948956 then return end
 			if hitPart.Name == "Head" then
 				if humanoid.Health - AR.DAMAGE * AR.HEADSHOT_MULTIPLIER > 0 then
 					humanoid:TakeDamage(AR.DAMAGE * AR.HEADSHOT_MULTIPLIER)
 				else
 					local index = 0
 					local numberMap = {}
-					local nameThing = "Torso"
-					if hitPart.Name ~= "Left Arm" and hitPart.Name ~= "Torso" and hitPart.Name ~= "Right Arm" and hitPart.Name ~= "Left Arm" and hitPart.Name ~= "Left Leg" and hitPart.Name ~= "Right Leg" then 
-						nameThing = "Torso"
-					else
-						nameThing = hitPart.Name
-					end
-					for i1,v in pairs(AR.Animations[nameThing]) do
+					for i1,v in pairs(AR.Animations["Head"]) do
 						local chance = v[2]
-						print(chance)
 						assert(chance <= 1000000, "The chance on "..i1.." Is way to high, and will cause a crash or lag badly, and or possibly error out.")
-						if chance >= 10000 then
+						if v.Chance <= 10000 then
 							warn("Chance value for "..i1.." is too high!! This will cause the script to slow down due to the extra computing power required. Please refrain from using high chance values.")
 							wait()
 						end
-						for i=1,chance do
+						for i=1,v.Chance do
 							if i % 100000 == 0 then
 								wait()
 							end
 							index += 1
 							local number = index
-							table.insert(numberMap,number,v[1])
+							table.insert(numberMap,number,i1)
 						end
 					end
 					local Selection = rand:NextInteger(1,index)
 					local anim = numberMap[Selection]
 					local animObj = Instance.new("Animation")
-					animObj.AnimationId = anim
-					local animThing = humanoid:LoadAnimation(animObj)
+					animObj.AnimationId = anim[1]
+					humanoid:LoadAnimation(animObj)
 					humanoid.Parent.HumanoidRootPart.Anchored = true
-					animThing:Play()
-					humanoid.Health = 1000000
-					animThing.Stopped:Wait()
+					animObj:Play()
+					animObj.Stopped:Wait()
 					humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
 					humanoid.Health = 0
 					humanoid.Parent:BreakJoints()
@@ -384,38 +375,30 @@ function ServerTbl.OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity
 				else
 					local index = 0
 					local numberMap = {}
-					local nameThing = "Torso"
-					if hitPart.Name ~= "Left Arm" and hitPart.Name ~= "Torso" and hitPart.Name ~= "Right Arm" and hitPart.Name ~= "Left Arm" and hitPart.Name ~= "Left Leg" and hitPart.Name ~= "Right Leg" then 
-						nameThing = "Torso"
-					else
-						nameThing = hitPart.Name
-					end
-					for i1,v in pairs(AR.Animations[nameThing]) do
+					for i1,v in pairs(AR.Animations["Head"]) do
 						local chance = v[2]
-						print(chance)
 						assert(chance <= 1000000, "The chance on "..i1.." Is way to high, and will cause a crash or lag badly, and or possibly error out.")
-						if chance >= 10000 then
+						if v.Chance <= 10000 then
 							warn("Chance value for "..i1.." is too high!! This will cause the script to slow down due to the extra computing power required. Please refrain from using high chance values.")
 							wait()
 						end
-						for i=1,chance do
+						for i=1,v.Chance do
 							if i % 100000 == 0 then
 								wait()
 							end
 							index += 1
 							local number = index
-							table.insert(numberMap,number,v[1])
+							table.insert(numberMap,number,i1)
 						end
 					end
 					local Selection = rand:NextInteger(1,index)
 					local anim = numberMap[Selection]
 					local animObj = Instance.new("Animation")
-					animObj.AnimationId = anim
-					local animThing = humanoid:LoadAnimation(animObj)
+					animObj.AnimationId = anim[1]
+					humanoid:LoadAnimation(animObj)
 					humanoid.Parent.HumanoidRootPart.Anchored = true
-					animThing:Play()
-					humanoid.Health = 48948956
-					animThing.Stopped:Wait()
+					animObj:Play()
+					animObj.Stopped:Wait()
 					humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
 					humanoid.Health = 0
 					humanoid.Parent:BreakJoints()

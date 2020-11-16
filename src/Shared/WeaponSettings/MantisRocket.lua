@@ -9,58 +9,42 @@ local AR = {
 	WeaponEssentails = ReplicatedStorage.WeaponEssentails[script.Name],
 	WeaponCaster = FastCast.new(),
     -------------Config-------------
-    DAMAGE = 10,
-    HEADSHOT_MULTIPLIER = 1.5,
+    DAMAGE = 40,
+    HEADSHOT_MULTIPLIER = 1,
     RELOAD_TIME = 2,
     TOTAL_ROUNDS = 600,
-    ROUNDS_PER_MAG = 30,
+    ROUNDS_PER_MAG = 5,
     BULLET_SPEED = 750,
-    BULLET_MAXDIST = 1000,
+    BULLET_MAXDIST = 400,
     BULLET_GRAVITY = Vector3.new(0, -30, 0),
     --Spread--
-    MIN_BULLET_SPREAD_ANGLE = 1.88,
-    MAX_BULLET_SPREAD_ANGLE = 4,
+    MIN_BULLET_SPREAD_ANGLE = 0,
+    MAX_BULLET_SPREAD_ANGLE = 1,
 
-    ADS_MIN_BULLET_SPREAD_ANGLE = 0,
-    ADS_MAX_BULLET_SPREAD_ANGLE = 1,
+	ADS_MIN_BULLET_SPREAD_ANGLE = 0,
+	ADS_MAX_BULLET_SPREAD_ANGLE = 1,
 
-    CROUCH_MIN_BULLET_SPREAD_ANGLE = 0,
-    CROUCH_MAX_BULLET_SPREAD_ANGLE = 0.25,
+	CROUCH_MIN_BULLET_SPREAD_ANGLE = 0,
+	CROUCH_MAX_BULLET_SPREAD_ANGLE = 0.25,
     ----------
-    RPM = 600,
+    RPM = 400,
     PIERCE_DEMO = true,
     SHOTGUN = false,
 	SHOTGUN_SHOTS = 10,
 	
-	Bullet = game.ReplicatedStorage.Bullet,
+	EXPLOISION_SIZE = 8,
+	EXPLOISION_FRAGMENTS = 4,
+	
+	Bullet = game.ReplicatedStorage.Rocket,
 
 	--Animations--
 	Animations = {
-		["Torso"] = {
-			[1] = {"rbxassetid://5953177004", 20},
-			[2] = {"rbxassetid://5953355331", 1},
-			
-		},
-		["Head"]  = {
-			[1] = {"rbxassetid://5952985208", 1},
-			[2] = {"rbxassetid://5952985846", 1},
-			
-		},
-		["Right Arm"]  = {
-			[1] = {"rbxassetid://5952980640", 1},
-			
-		},
-		["Left Arm"]  = {
-			[1] = {"rbxassetid://5952979583", 1},
-			
-		},
-		["Right Leg"]  = {
-			[1] = {"rbxassetid://5952983915", 1},
-			
-		},
-		["Left Leg"] = {
-			[1] = {"rbxassetid://5952975428", 1},
-		}
+		-- ADS = "rbxassetid://5707613213",
+		-- CrouchADS = "rbxassetid://5707616614",
+		-- CrouchReload = "rbxassetid://5707618824",
+		-- CrouchShoot = "rbxassetid://5707615634",
+		-- Reload = "rbxassetid://5707606742",
+		-- Shoot = "rbxassetid://5707608051",
 	},
 	---------------------------------
 }
@@ -142,21 +126,73 @@ function CreateDecal( PartHit, testPosition, DecalSize )
 	BulletDecal.Size = UDim2.new( 0, SCALE*DecalSize, 0, SCALE*DecalSize );
 	BulletDecal.AnchorPoint = Vector2.new(0.5, 0.5);
 	BulletDecal.Position = UDim2.new(RelativeX, 0, RelativeY, 0);
-	BulletDecal.Image = "rbxassetid://36214639";
+	BulletDecal.Image = "rbxassetid://1099167122";
 	BulletDecal.Parent = SurfaceFrame;
 	
 	SurfaceGui.Parent = PartHit;
 	Tween(10,{ImageTransparency = 1},BulletDecal)
 	Debris:AddItem(SurfaceGui,10)
 end
+function Particalize(attachment)
+	local s = AR.EXPLOISION_SIZE
+	for i = 1,AR.EXPLOISION_FRAGMENTS do 
+		local trail = Instance.new("Part")  
+		trail.formFactor = "Custom" 
+		trail.Size = Vector3.new(1,1,1)
+		trail.CanCollide = false
+		trail.Locked = true
+		trail.Transparency = 1 
+		trail.CFrame = attachment.CFrame + Vector3.new(0,5,0) 
+		trail.Parent = game.Workspace 
+		Debris:AddItem(trail, 5) 
+		trail.Velocity = Vector3.new(math.random(-60*(s/10),60*(s/10)),math.random(50*(s/10),130*(s/10)),math.random(-60*(s/10),60*(s/10))) 
+		local fire = AR.WeaponEssentails.ImpactParticle.Fire:Clone()
+		fire.Parent = trail
+		fire.Enabled = true
+		local smoke = AR.WeaponEssentails.ImpactParticle.Smoke:Clone()
+		smoke.Parent = trail
+		smoke.Enabled = true 
+	end
+	local C = AR.WeaponEssentails.ImpactParticle:GetChildren()
+	for i,v in pairs(C) do
+		print(v.Name)
+		local Particle = v:Clone()
+		if Particle.Name == "Particle1" then
+			Particle.Size = NumberSequence.new{
+				NumberSequenceKeypoint.new(0, 1*(s/10)),
+				NumberSequenceKeypoint.new(0.304473, s),
+				NumberSequenceKeypoint.new(0.503608, s),
+				NumberSequenceKeypoint.new(0.652237, 0),
+				NumberSequenceKeypoint.new(1, 0),
+			}
+		elseif Particle.Name == "Particle2" then
+			Particle.Size = NumberSequence.new{
+				NumberSequenceKeypoint.new(0, 1.75*(s/10)),
+				NumberSequenceKeypoint.new(0.1, 3.79*(s/10)),
+				NumberSequenceKeypoint.new(1, s),
+			}
+		elseif Particle.Name == "Particle3" then
+			Particle.Size = NumberSequence.new{
+				NumberSequenceKeypoint.new(0, 8.5*(s/10)),
+				NumberSequenceKeypoint.new(1, s),
+			}
+			Particle.Drag = 5
+			Particle.Speed = NumberRange.new(100*(s/10))
+		end
+		Particle.Parent = attachment
+		Particle:Emit(40)
+	end
+	Debris:AddItem(attachment,10)
+end
 function MakeParticleFX(position, normal, hitPart)
+	if normal == nil then
+		normal = Vector3.new(0.01,0.01,0.01)
+	end
 	local attachment = Instance.new("Attachment")
 	attachment.CFrame = CFrame.new(position, position + normal)
 	attachment.Parent = workspace.Terrain
-	local particle = AR.WeaponEssentails.ImpactParticle:Clone()
-	particle.Parent = attachment
-	Debris:AddItem(attachment, particle.Lifetime.Max)
-	particle:Emit(20)
+	Particalize(attachment)
+	Debris:AddItem(attachment, 10)
 end
 
 function PlaySound(Sound)
@@ -227,12 +263,9 @@ function ClientTbl.EnemyCanRayPierce(hitPart, hitPoint, normal, material, segmen
 end
 
 function ClientTbl:Fire(FirePointObject,direction,modifiedBulletSpeed,bullet,ignore,bool,BULLET_GRAVITY,clientThatFired)
-	bullet:WaitForChild("CylinderHandleAdornment").Enabled = true
-	bullet:WaitForChild("BillboardGui").Enabled = true
-	bullet:WaitForChild("BillboardGui").Size = UDim2.fromScale(0,0)
-	Tween(5,{Size = UDim2.fromScale(30,30)},bullet:WaitForChild("BillboardGui"))
+	bullet:WaitForChild("Smoke").ParticleEmitter.Enabled = true
 	bullet.CFrame = CFrame.new(FirePointObject.WorldPosition, FirePointObject.WorldPosition + direction)
-	
+	bullet.Transparency = 1
 	if clientThatFired.Parent == game.Players then
 		if clientThatFired.Character.Crouching.Value then
 			local Anim = PlayAnimation(clientThatFired,AR.Animations.CrouchShoot)
@@ -247,58 +280,46 @@ function ClientTbl:Fire(FirePointObject,direction,modifiedBulletSpeed,bullet,ign
 	AR.WeaponCaster:Fire(FirePointObject.WorldPosition,direction,modifiedBulletSpeed,bullet,ignore,bool,BULLET_GRAVITY,ClientTbl.CanRayPierce,clientThatFired)
 end
 
+
 function ClientTbl.OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, clientThatFired, Gun)
-	cosmeticBulletObject:WaitForChild("CylinderHandleAdornment").Enabled = false	
-	cosmeticBulletObject:WaitForChild("CylinderHandleAdornment").Lifetime = 0.2
-	cosmeticBulletObject:WaitForChild("BillboardGui").Enabled = false
-	delay(0.75,function()
-		cosmeticBulletObject:WaitForChild("CylinderHandleAdornment").Lifetime = 1
-		cosmeticBulletObject:WaitForChild("CylinderHandleAdornment").MaxLength = 10
-		cosmeticBulletObject:WaitForChild("BillboardGui").ImageLabel.ImageTransparency = 0
-		cosmeticBulletObject.Attachment.Position = Vector3.new(-0.1,0,0)
-		cosmeticBulletObject.Attachment2.Position = Vector3.new(0.1,0,0)
-	end)
+	cosmeticBulletObject:WaitForChild("Smoke").ParticleEmitter.Enabled = false
+	cosmeticBulletObject.Transparency = 1
+	MakeParticleFX(hitPoint, normal, hitPart)
 	if hitPart ~= nil and hitPart.Parent ~= nil then
-		local humanoid = hitPart.Parent:FindFirstChildOfClass("Humanoid")
-		if not humanoid then
-			CreateDecal(hitPart,hitPoint,1)
-		elseif clientThatFired == game.Players.LocalPlayer then
-			if hitPart.Name == "Head" then
-				PlaySound(AR.WeaponEssentails.HeadShotHitmarker)
-			else
-				PlaySound(AR.WeaponEssentails.Hitmarker)
-			end
-			local new = game.Players.LocalPlayer.PlayerGui.HitRegister.TextLabel:Clone()
-			new.Name = "New"
-			new.Parent = game.Players.LocalPlayer.PlayerGui.HitRegister
-			local vector, onScreen = workspace.CurrentCamera:WorldToScreenPoint(hitPoint)
-			if onScreen then
-				new.Position = UDim2.fromOffset(vector.X, vector.Y)
-				new.Visible = true
-				local start = tick()
-				repeat 
-					wait()
-					local vector, onScreen = workspace.CurrentCamera:WorldToScreenPoint(hitPoint)
+		for i,v in pairs(workspace.Mobs:GetChildren()) do
+			if v:FindFirstChild("HumanoidRootPart") then
+				if (v.HumanoidRootPart.Position-hitPoint).magnitude <= AR.EXPLOISION_SIZE then
+					PlaySound(AR.WeaponEssentails.Hitmarker)
+					local new = game.Players.LocalPlayer.PlayerGui.HitRegister.TextLabel:Clone()
+					new.Name = "New"
+					new.Parent = game.Players.LocalPlayer.PlayerGui.HitRegister
+	
+					local vector, onScreen = workspace.CurrentCamera:WorldToScreenPoint(v.HumanoidRootPart.Position)
 					if onScreen then
-						new.Visible = true
 						new.Position = UDim2.fromOffset(vector.X, vector.Y)
-					else
-						new.Visible = false
+						new.Visible = true
+						local start = tick()
+						repeat 
+							wait()
+							local vector, onScreen = workspace.CurrentCamera:WorldToScreenPoint(v.HumanoidRootPart.Position)
+							if onScreen then
+								new.Visible = true
+								new.Position = UDim2.fromOffset(vector.X, vector.Y)
+							else
+								new.Visible = false
+							end
+						until
+						tick()-start >= 0.3
+						new:Destroy()
 					end
-				until
-					tick()-start >= 0.3
-				new:Destroy()
+				end
 			end
 		end
-		MakeParticleFX(hitPoint, normal, hitPart)
 	end
 end
 
 function ClientTbl.OnRayUpdated(castOrigin, segmentOrigin, segmentDirection, length, segmentVelocity, cosmeticBulletObject, distanceTravelled, MaxDistance, clientThatFired)
 	local ForamttedDist = MaxDistance-(MaxDistance*0.25)
-	if distanceTravelled >= ForamttedDist then
-		cosmeticBulletObject:WaitForChild("BillboardGui").ImageLabel.ImageTransparency = math.clamp((distanceTravelled-ForamttedDist)/(MaxDistance*0.25),0,(MaxDistance*0.25))
-	end
 	local bulletLength = cosmeticBulletObject.Size.Z / 2
 	local baseCFrame = CFrame.new(segmentOrigin, segmentOrigin + segmentDirection)
 	cosmeticBulletObject.CFrame = baseCFrame * CFrame.new(0, 0, -(length - bulletLength))
@@ -330,95 +351,16 @@ function ServerTbl.CanRayPierce(hitPart, hitPoint, normal, material, segmentVelo
 	end
 	return false
 end
-local rand = Random.new()
+
 function ServerTbl.OnRayHit(hitPart, hitPoint, normal, material, segmentVelocity, cosmeticBulletObject, ClientThatFired, cache)
 	if hitPart ~= nil and hitPart.Parent ~= nil then
-		local humanoid = hitPart.Parent:FindFirstChildOfClass("Humanoid")
-		if humanoid then
-			if humanoid.Health == 48948956 then return end
-			if hitPart.Name == "Head" then
-				if humanoid.Health - AR.DAMAGE * AR.HEADSHOT_MULTIPLIER > 0 then
-					humanoid:TakeDamage(AR.DAMAGE * AR.HEADSHOT_MULTIPLIER)
-				else
-					local index = 0
-					local numberMap = {}
-					local nameThing = "Torso"
-					if hitPart.Name ~= "Left Arm" and hitPart.Name ~= "Torso" and hitPart.Name ~= "Right Arm" and hitPart.Name ~= "Left Arm" and hitPart.Name ~= "Left Leg" and hitPart.Name ~= "Right Leg" then 
-						nameThing = "Torso"
-					else
-						nameThing = hitPart.Name
+		for i,v in pairs(workspace.Mobs:GetChildren()) do
+			if v:FindFirstChild("HumanoidRootPart") then
+				if (v.HumanoidRootPart.Position-hitPoint).magnitude <= AR.EXPLOISION_SIZE then
+					local humanoid = v:FindFirstChildOfClass("Humanoid")
+					if humanoid then
+						humanoid:TakeDamage(AR.DAMAGE)
 					end
-					for i1,v in pairs(AR.Animations[nameThing]) do
-						local chance = v[2]
-						print(chance)
-						assert(chance <= 1000000, "The chance on "..i1.." Is way to high, and will cause a crash or lag badly, and or possibly error out.")
-						if chance >= 10000 then
-							warn("Chance value for "..i1.." is too high!! This will cause the script to slow down due to the extra computing power required. Please refrain from using high chance values.")
-							wait()
-						end
-						for i=1,chance do
-							if i % 100000 == 0 then
-								wait()
-							end
-							index += 1
-							local number = index
-							table.insert(numberMap,number,v[1])
-						end
-					end
-					local Selection = rand:NextInteger(1,index)
-					local anim = numberMap[Selection]
-					local animObj = Instance.new("Animation")
-					animObj.AnimationId = anim
-					local animThing = humanoid:LoadAnimation(animObj)
-					humanoid.Parent.HumanoidRootPart.Anchored = true
-					animThing:Play()
-					humanoid.Health = 1000000
-					animThing.Stopped:Wait()
-					humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
-					humanoid.Health = 0
-					humanoid.Parent:BreakJoints()
-				end
-			else
-				if humanoid.Health - AR.DAMAGE > 0 then
-					humanoid:TakeDamage(AR.DAMAGE)
-				else
-					local index = 0
-					local numberMap = {}
-					local nameThing = "Torso"
-					if hitPart.Name ~= "Left Arm" and hitPart.Name ~= "Torso" and hitPart.Name ~= "Right Arm" and hitPart.Name ~= "Left Arm" and hitPart.Name ~= "Left Leg" and hitPart.Name ~= "Right Leg" then 
-						nameThing = "Torso"
-					else
-						nameThing = hitPart.Name
-					end
-					for i1,v in pairs(AR.Animations[nameThing]) do
-						local chance = v[2]
-						print(chance)
-						assert(chance <= 1000000, "The chance on "..i1.." Is way to high, and will cause a crash or lag badly, and or possibly error out.")
-						if chance >= 10000 then
-							warn("Chance value for "..i1.." is too high!! This will cause the script to slow down due to the extra computing power required. Please refrain from using high chance values.")
-							wait()
-						end
-						for i=1,chance do
-							if i % 100000 == 0 then
-								wait()
-							end
-							index += 1
-							local number = index
-							table.insert(numberMap,number,v[1])
-						end
-					end
-					local Selection = rand:NextInteger(1,index)
-					local anim = numberMap[Selection]
-					local animObj = Instance.new("Animation")
-					animObj.AnimationId = anim
-					local animThing = humanoid:LoadAnimation(animObj)
-					humanoid.Parent.HumanoidRootPart.Anchored = true
-					animThing:Play()
-					humanoid.Health = 48948956
-					animThing.Stopped:Wait()
-					humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
-					humanoid.Health = 0
-					humanoid.Parent:BreakJoints()
 				end
 			end
 		end

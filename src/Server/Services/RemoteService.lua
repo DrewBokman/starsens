@@ -1377,7 +1377,6 @@ function RemoteService.Client:GrabKey(plr)
 end
 local lastcheck = {}
 function RemoteService.Client:InvokeServer(vr1, vr2)
-    print(vr1,vr2)
 	if isInTable(lastcheck, vr2) then
 		RemoteService:uhoh(vr1, "018| Double call",true)
 	end
@@ -1390,7 +1389,6 @@ function RemoteService.Client:InvokeServer(vr1, vr2)
 		data = HttpService:JSONDecode(Base64:Decode(crypt(decrypt(HttpService:JSONEncode(enc1), vr2), enc1, true)))
 	end)
     if suc then
-        print(data)
 		if data[2] and sha256(key) == crypt(tostring(data[2]), enc1, true) and data[3] and data[4] then
 			if isInTable(lastcheck, data[4]) then
 				RemoteService:uhoh(vr1, "015| Time Double check",true)
@@ -1398,18 +1396,13 @@ function RemoteService.Client:InvokeServer(vr1, vr2)
 			end
 			table.insert(lastcheck, #lastcheck + 1, data[4])
             if os.time() - data[3] <= 5 + (require(script.Parent.Parent.Modules.PingModule):getPing(vr1) * 10) then
-                print("a")
-                print(vr1,data[1],data[5],data[4])
 				if vr1 and vr2 and data[1] and data[4] then
-                    print("b")
                     local args = {}
 					for i=5,#data do
 						table.insert(args,#args+1,data[i])
                     end
-                    print(data[1],RemoteService[data[1]])
 					local ask = RemoteService[data[1]]("blank", vr1, args)
 					local encretwy = encrypt(script.PlayerData[vr1.UserId].Key.Value,tostring(ask))
-                    print(encretwy,ask)
                     return Base64:Encode(encretwy)
 				end
 			else
@@ -1423,7 +1416,6 @@ function RemoteService.Client:InvokeServer(vr1, vr2)
 	end
 end
 function RemoteService.Client:LowSecurityInvokeServer(vr1, vr2)
-	print(vr1,vr2)
 	if isInTable(lastcheck, vr2) then
 		RemoteService:uhoh(vr1, "018| Double call",true)
 	end
@@ -1436,7 +1428,6 @@ function RemoteService.Client:LowSecurityInvokeServer(vr1, vr2)
 		data = HttpService:JSONDecode(Base64:Decode(crypt(vr2, enc1, true)))
 	end)
 	if suc then
-		print(data)
 		if data[2] and sha256(key) == crypt(tostring(data[2]), enc1, true) and data[3] and data[4] then
 			if isInTable(lastcheck, data[4]) then
 				RemoteService:uhoh(vr1, "015| Time Double check",true)
@@ -1444,18 +1435,13 @@ function RemoteService.Client:LowSecurityInvokeServer(vr1, vr2)
 			end
 			table.insert(lastcheck, #lastcheck + 1, data[4])
 			if os.time() - data[3] <= 5 + (require(script.Parent.Parent.Modules.PingModule):getPing(vr1) * 10) then
-				print("a")
-				print(vr1,data[1],data[5],data[4])
 				if vr1 and vr2 and data[1] and data[4] then
-					print("b")
 					local args = {}
 					for i=5,#data do
 						table.insert(args,#args+1,data[i])
 					end
-					print(data[1],RemoteService.LowSecurity[data[1]])
 					local ask = RemoteService.LowSecurity[data[1]]("blank", vr1, args)
 					local encretwy = encrypt(script.PlayerData[vr1.UserId].Key.Value,tostring(ask))
-					print(encretwy,ask)
 					return Base64:Encode(encretwy)
 				end
 			else
@@ -1535,12 +1521,10 @@ function RemoteService:GetAmmoInfo(plr,args)
 	return game:GetService("HttpService"):JSONEncode(resp)
 end
 function RemoteService:Reload(plr,args)
-    print(plr, args)
 	local resp = AeroServer.Services.WeaponWrapper:Reload(plr)
 	return game:GetService("HttpService"):JSONEncode(resp)
 end
 function RemoteService.LowSecurity:Fire(plr,args)
-	print(args[1],args[2],args[3])
 	local resp = AeroServer.Services.WeaponWrapper:Fire(plr,args[1],args[2],args[3])
 	return game:GetService("HttpService"):JSONEncode(resp)
 end
@@ -1553,10 +1537,7 @@ function RemoteService:Equip(plr,args)
 	return game:GetService("HttpService"):JSONEncode(resp)
 end
 function RemoteService:New(plr,args)
-    print(plr,args)
-    
 	local resp = AeroServer.Services.WeaponWrapper:New(plr)
-	print(resp)
 	return game:GetService("HttpService"):JSONEncode(resp)--AeroServer.Services.WeaponWrapper:New(plr)
 end
 return RemoteService

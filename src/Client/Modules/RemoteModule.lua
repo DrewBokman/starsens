@@ -1329,7 +1329,6 @@ function RemoteModule:FireServer(vr1,...)
 	repeat wait() until enc1 ~= nil
 	local firedata = encrypt(HttpService:JSONEncode(enc1),crypt(Base64:Encode(HttpService:JSONEncode(tbl)), GetEnc()))
     local data = RemoteService:InvokeServer(firedata)
-    print(data)
     if data == nil then return end
 	local b64 = Base64:Decode(data)
 	return decrypt(FakeKey,b64)
@@ -1347,7 +1346,6 @@ function RemoteModule:LowImpactFireServer(vr1,...)
 	repeat wait() until enc1 ~= nil
 	local firedata = crypt(Base64:Encode(HttpService:JSONEncode(tbl)), GetEnc())
     local data = RemoteService:LowSecurityInvokeServer(firedata)
-    print(data)
     if data == nil then return end
 	local b64 = Base64:Decode(data)
 	return decrypt(FakeKey,b64)

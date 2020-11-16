@@ -140,7 +140,6 @@ function WeaponWrapper.Client:Fire(player,Direction,Aiming,Crouching)
     local Weapon = WeaponWrapper.Players[player.UserId].CurrentWeapon
     local CurrentAmmo = WeaponWrapper.Players[player.UserId].CurrentWeapon.WeaponClass.Rounds
     if CurrentAmmo <=0 then return weaponTable.AmmoData end
-    print(CurrentAmmo)
     Weapon.CanFire = false
     delay(60/WeaponWrapper.Players[player.UserId].CurrentWeapon.Settings.RPM,function()
         Weapon.CanFire = true
